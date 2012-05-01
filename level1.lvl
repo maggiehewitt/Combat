@@ -1,0 +1,4 @@
+Background bg.jpg
+Player1 50 200 default.jpg N.jpg NE.jpg E.jpg SE.jpg S.jpg SW.jpg W.jpg NW.jpg bullet.jpg
+Player2 600 200 default.jpg N.jpg NE.jpg E.jpg SE.jpg S.jpg SW.jpg W.jpg NW.jpg bullet.jpg
+Barrier 200 200 barrier.jpg
