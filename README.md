@@ -5,5 +5,5 @@ decade ago.
 
 ## Links
 
- * [http://www.se.rit.edu/~se362/UnitActivities/CaseStudies/RefactoringCaseStudy.htm](Requirements)
- * [http://www.atariguide.com/0/090.php](Atari Game Specification)
+ * [Requirements](http://www.se.rit.edu/~se362/UnitActivities/CaseStudies/RefactoringCaseStudy.htm)
+ * [Atari Game Specification](http://www.atariguide.com/0/090.php)
