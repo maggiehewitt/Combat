@@ -1,0 +1,10 @@
+lines,tokens,occurrences,location.a,source.a,location.b,source.b
+42,150,2,235,Bullet.java,141,Player.java
+6,70,2,150,LevelBuilder.java,167,LevelBuilder.java
+5,50,2,149,KeyDialog.java,155,KeyDialog.java
+6,45,2,292,DirectionalImage.java,306,DirectionalImage.java
+13,32,2,135,Player.java,181,Player.java
+5,29,2,72,Scoreboard.java,87,Scoreboard.java
+5,27,2,128,TimeManager.java,134,TimeManager.java
+2,25,2,172,Bullet.java,182,Bullet.java
+2,25,2,193,Bullet.java,203,Bullet.java

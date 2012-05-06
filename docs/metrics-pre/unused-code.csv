@@ -1,0 +1,6 @@
+"Problem","Package","File","Priority","Line","Description","Rule set","Rule"
+"1","combat","Z:\Workspace\combat\combat\Bullet.java","3","150","Avoid unused local variables such as 'barUpperRight'.","Unused Code","UnusedLocalVariable"
+"2","combat","Z:\Workspace\combat\combat\Bullet.java","3","151","Avoid unused local variables such as 'barLowerLeft'.","Unused Code","UnusedLocalVariable"
+"3","combat","Z:\Workspace\combat\combat\Bullet.java","3","157","Avoid unused local variables such as 'bulUpperRight'.","Unused Code","UnusedLocalVariable"
+"4","combat","Z:\Workspace\combat\combat\Bullet.java","3","158","Avoid unused local variables such as 'bulLowerLeft'.","Unused Code","UnusedLocalVariable"
+"1","combat","Z:\Workspace\combat\combat\Thing.java","3","29","Avoid modifiers which are implied by the context","Unused Code","UnusedModifier"

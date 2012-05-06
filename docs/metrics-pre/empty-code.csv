@@ -1,0 +1,6 @@
+"Problem","Package","File","Priority","Line","Description","Rule set","Rule"
+"1","combat","Z:\Workspace\combat\combat\Bullet.java","3","119","Avoid empty if statements","Empty Code","EmptyIfStmt"
+"2","combat","Z:\Workspace\combat\combat\Bullet.java","3","218","Avoid empty if statements","Empty Code","EmptyIfStmt"
+"1","combat","Z:\Workspace\combat\combat\CommandInterpreter.java","3","102","Avoid empty if statements","Empty Code","EmptyIfStmt"
+"1","combat","Z:\Workspace\combat\combat\Player.java","3","129","Avoid empty if statements","Empty Code","EmptyIfStmt"
+"1","combat","Z:\Workspace\combat\combat\PlayerManager.java","3","237","Avoid empty if statements","Empty Code","EmptyIfStmt"
