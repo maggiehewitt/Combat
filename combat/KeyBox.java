@@ -70,15 +70,17 @@ public class KeyBox extends JTextField {
         }
 
         public void keyPressed(KeyEvent e) {
+            char kchar = e.getKeyChar();
+            int kcode = e.getKeyCode();
+            System.out.println(e.getKeyCode());
+            setKeyCode(kcode);
         }
 
         public void keyReleased(KeyEvent e) {
         }
 
         public void keyTyped(KeyEvent e) {
-            char kc = e.getKeyChar();
-            System.out.println(e.getKeyCode());
-            setKeyCode(kc);
+
         }
     }
 
