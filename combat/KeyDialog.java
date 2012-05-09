@@ -39,12 +39,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class KeyDialog extends JDialog {
+public class KeyDialog extends JFrame {
     private static final long serialVersionUID = -1;
     KeyBox p1Up;
     KeyBox p1Down;
@@ -65,9 +64,12 @@ public class KeyDialog extends JDialog {
      * 
      * @param mainFrame The frame of the game (which I am part of).
      */
-    public KeyDialog(JFrame mainFrame) {
+    public KeyDialog() {
         // call the parent constructor
-        super(mainFrame, "Key Mapping");
+        super("Key Mapping");
+
+        // Make exiting possible
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // fill the frame with the fields, and then construct it
         createDialog();
@@ -165,7 +167,7 @@ public class KeyDialog extends JDialog {
         }
 
         public void actionPerformed(ActionEvent e) {
-            setVisible(false);
+            // setVisible(false);
         }
     }
 

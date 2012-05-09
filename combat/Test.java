@@ -25,7 +25,6 @@ package combat;
  * 
  */
 
-import javax.swing.JFrame;
 
 public class Test {
 
@@ -36,11 +35,8 @@ public class Test {
      * @param JFrame the frame of the game (which I am part of)
      */
     public static void main(String[] argv) {
-        JFrame aframe = new JFrame();
 
-        KeyDialog testd = new KeyDialog(aframe);
-
-        aframe.setVisible(true);
+        KeyDialog testd = new KeyDialog();
         testd.setVisible(true);
 
     }
