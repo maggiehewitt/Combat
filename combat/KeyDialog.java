@@ -40,7 +40,9 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.Properties;
 
 import javax.swing.JButton;
@@ -95,17 +97,17 @@ public class KeyDialog extends JFrame {
         // create the components and add them to the panel
         mainPanel = new JPanel();
 
-        p1Up = new KeyBox();
-        p1Down = new KeyBox();
-        p1Right = new KeyBox();
-        p1Left = new KeyBox();
-        p1Fire = new KeyBox();
+        p1Up = new KeyBox(this.bindings, "p1-up");
+        p1Down = new KeyBox(this.bindings, "p1-down");
+        p1Right = new KeyBox(this.bindings, "p1-right");
+        p1Left = new KeyBox(this.bindings, "p1-left");
+        p1Fire = new KeyBox(this.bindings, "p1-fire");
 
-        p2Up = new KeyBox();
-        p2Down = new KeyBox();
-        p2Right = new KeyBox();
-        p2Left = new KeyBox();
-        p2Fire = new KeyBox();
+        p2Up = new KeyBox(this.bindings, "p2-up");
+        p2Down = new KeyBox(this.bindings, "p2-down");
+        p2Right = new KeyBox(this.bindings, "p2-right");
+        p2Left = new KeyBox(this.bindings, "p2-left");
+        p2Fire = new KeyBox(this.bindings, "p2-fire");
 
         mainPanel.setLayout(new GridLayout(6, 3));
 
@@ -133,11 +135,22 @@ public class KeyDialog extends JFrame {
 
         JButton okButton = new JButton("OK");
         JButton cancelButton = new JButton("Cancel");
-        ActionListener cbl = new CancelButtonListener();
-        ActionListener obl = new OKButtonListener();
+        // ActionListener cbl = new CancelButtonListener();
+        // ActionListener obl = new OKButtonListener();
 
-        okButton.addActionListener(obl);
-        cancelButton.addActionListener(cbl);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveCurrentBindings();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadExistingBindings();
+            }
+        });
 
         JPanel buttonPanel = new JPanel();
 
@@ -175,37 +188,16 @@ public class KeyDialog extends JFrame {
         this.p2Fire.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-fire")));
     }
 
-    public class OKButtonListener implements ActionListener {
-        public OKButtonListener() {
-        }
+    public void saveCurrentBindings() {
+        File bindingsFile = new File(BINDINGS_FILE);
 
-        public void actionPerformed(ActionEvent e) {
-            System.out.println("ok button pressed ");
-            // now we have to assign the commands
-            int[] p1 = new int[5];
-            int[] p2 = new int[5];
+        Writer writer = null;
 
-            p1[0] = p1Up.getKeyCode();
-            p1[1] = p1Down.getKeyCode();
-            p1[2] = p1Left.getKeyCode();
-            p1[3] = p1Right.getKeyCode();
-            p1[4] = p1Fire.getKeyCode();
-
-            p1[0] = p1Up.getKeyCode();
-            p1[1] = p1Down.getKeyCode();
-            p1[2] = p1Left.getKeyCode();
-            p1[3] = p1Right.getKeyCode();
-            p1[4] = p1Fire.getKeyCode();
+        try {
+            writer = new PrintWriter(bindingsFile);
+            this.bindings.store(writer, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
-    public class CancelButtonListener implements ActionListener {
-        public CancelButtonListener() {
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            // setVisible(false);
-        }
-    }
-
 }

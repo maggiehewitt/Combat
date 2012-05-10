@@ -26,8 +26,10 @@ package combat;
  * 
  */
 
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Properties;
 
 import javax.swing.JTextField;
 
@@ -36,14 +38,30 @@ public class KeyBox extends JTextField {
 
     int keyCode;
 
+    Properties map;
+
+    String id;
+
     /**
      * Sets the key code for the value in the box.
      * 
      * @param KeyCode The key code value.
      */
-    public KeyBox() {
+    public KeyBox(Properties map, String id) {
         super();
-        addKeyListener(new TFListener());
+
+        this.map = map;
+        this.id = id;
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                char kchar = e.getKeyChar();
+                int kcode = e.getKeyCode();
+                System.out.println(e.getKeyCode());
+                setKeyCode(kcode);
+            }
+        });
     }
 
     /**
@@ -63,17 +81,18 @@ public class KeyBox extends JTextField {
     public void setKeyCode(int keyCode) {
         this.keyCode = keyCode;
         setText((new Integer(keyCode)).toString());
+        this.map.put(this.id, Integer.toString(this.keyCode));
     }
 
     public class TFListener implements KeyListener {
-        public TFListener() {
+        private KeyBox kb;
+
+        public TFListener(KeyBox kb) {
+            this.kb = kb;
         }
 
         public void keyPressed(KeyEvent e) {
-            char kchar = e.getKeyChar();
-            int kcode = e.getKeyCode();
-            System.out.println(e.getKeyCode());
-            setKeyCode(kcode);
+
         }
 
         public void keyReleased(KeyEvent e) {
