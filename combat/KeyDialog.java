@@ -81,7 +81,7 @@ public class KeyDialog extends JFrame {
         super("Key Mapping");
 
         // Make exiting possible
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // fill the frame with the fields, and then construct it
         createDialog();
@@ -199,5 +199,9 @@ public class KeyDialog extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setTestingMode() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

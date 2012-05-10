@@ -25,7 +25,6 @@ package combat;
  * 
  */
 
-
 public class Test {
 
     /**
@@ -35,9 +34,9 @@ public class Test {
      * @param JFrame the frame of the game (which I am part of)
      */
     public static void main(String[] argv) {
-
         KeyDialog testd = new KeyDialog();
         testd.setVisible(true);
+        testd.setTestingMode();
 
     }
 

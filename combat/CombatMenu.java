@@ -100,7 +100,13 @@ public class CombatMenu extends JPanel {
         // Build the button that will set the key commands.
         JButton setKeys = new JButton("Set Keys");
         setKeys.setFocusable(false);
-        // Add an ActionListener here when we get that ready.
+        setKeys.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                KeyDialog config = new KeyDialog();
+                config.setVisible(true);
+            }
+        });
 
         // Build the buttons that will control pausing and unpausing the game.
         JButton pause = new JButton("Pause Game");
