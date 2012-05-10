@@ -70,11 +70,12 @@ package combat;
  */
 
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -111,11 +112,20 @@ public class LevelBuilder {
     CommandInterpreter ci;
 
     /**
+     * The command bindings
+     */
+    Properties keyBindings;
+
+    public static final String BINDINGS_FILE = "bindings.properties";
+
+    /**
      * The constructor
      */
     public LevelBuilder(String filename, JPanel canvas, CommandInterpreter ci) {
         barriers = new LinkedList();
         this.ci = ci;
+        this.keyBindings = new Properties();
+        loadKeyBindings();
         try {
             BufferedReader input = new BufferedReader(new FileReader(filename));
 
@@ -139,6 +149,15 @@ public class LevelBuilder {
             }
         } catch (Exception e) {
             System.err.println(e.toString());
+        }
+    }
+
+    private void loadKeyBindings() {
+        try {
+            Reader bindingsReader = new BufferedReader(new FileReader(BINDINGS_FILE));
+            this.keyBindings.load(bindingsReader);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -184,13 +203,18 @@ public class LevelBuilder {
 
         switch (playerID) {
             case 1:
-                player1 = new PlayerManager(1, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_D, KeyEvent.VK_A,
-                        KeyEvent.VK_Q, player, bullet, ci);
+                player1 = new PlayerManager(1, Integer.parseInt(this.keyBindings.getProperty("p1-up")),
+                        Integer.parseInt(this.keyBindings.getProperty("p1-down")), Integer.parseInt(this.keyBindings
+                                .getProperty("p1-right")), Integer.parseInt(this.keyBindings.getProperty("p1-left")),
+                        Integer.parseInt(this.keyBindings.getProperty("p1-fire")), player, bullet, ci);
                 player1.start();
                 break;
+
             case 2:
-                player2 = new PlayerManager(2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT,
-                        KeyEvent.VK_SHIFT, player, bullet, ci);
+                player2 = new PlayerManager(2, Integer.parseInt(this.keyBindings.getProperty("p2-up")),
+                        Integer.parseInt(this.keyBindings.getProperty("p2-down")), Integer.parseInt(this.keyBindings
+                                .getProperty("p2-right")), Integer.parseInt(this.keyBindings.getProperty("p2-left")),
+                        Integer.parseInt(this.keyBindings.getProperty("p2-fire")), player, bullet, ci);
                 player2.start();
                 break;
             default:
