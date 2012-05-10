@@ -37,15 +37,24 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Properties;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class KeyDialog extends JDialog {
+public class KeyDialog extends JFrame {
     private static final long serialVersionUID = -1;
+
+    public static final String BINDINGS_FILE = "bindings.properties";
+
     KeyBox p1Up;
     KeyBox p1Down;
     KeyBox p1Right;
@@ -60,17 +69,25 @@ public class KeyDialog extends JDialog {
 
     JPanel mainPanel;
 
+    private Properties bindings = new Properties();
+
     /**
      * Creates this dialog.
      * 
      * @param mainFrame The frame of the game (which I am part of).
      */
-    public KeyDialog(JFrame mainFrame) {
+    public KeyDialog() {
         // call the parent constructor
-        super(mainFrame, "Key Mapping");
+        super("Key Mapping");
+
+        // Make exiting possible
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // fill the frame with the fields, and then construct it
         createDialog();
+
+        // Load existing bindings
+        loadExistingBindings();
     }
 
     /**
@@ -80,17 +97,17 @@ public class KeyDialog extends JDialog {
         // create the components and add them to the panel
         mainPanel = new JPanel();
 
-        p1Up = new KeyBox();
-        p1Down = new KeyBox();
-        p1Right = new KeyBox();
-        p1Left = new KeyBox();
-        p1Fire = new KeyBox();
+        p1Up = new KeyBox(this.bindings, "p1-up");
+        p1Down = new KeyBox(this.bindings, "p1-down");
+        p1Right = new KeyBox(this.bindings, "p1-right");
+        p1Left = new KeyBox(this.bindings, "p1-left");
+        p1Fire = new KeyBox(this.bindings, "p1-fire");
 
-        p2Up = new KeyBox();
-        p2Down = new KeyBox();
-        p2Right = new KeyBox();
-        p2Left = new KeyBox();
-        p2Fire = new KeyBox();
+        p2Up = new KeyBox(this.bindings, "p2-up");
+        p2Down = new KeyBox(this.bindings, "p2-down");
+        p2Right = new KeyBox(this.bindings, "p2-right");
+        p2Left = new KeyBox(this.bindings, "p2-left");
+        p2Fire = new KeyBox(this.bindings, "p2-fire");
 
         mainPanel.setLayout(new GridLayout(6, 3));
 
@@ -118,11 +135,22 @@ public class KeyDialog extends JDialog {
 
         JButton okButton = new JButton("OK");
         JButton cancelButton = new JButton("Cancel");
-        ActionListener cbl = new CancelButtonListener();
-        ActionListener obl = new OKButtonListener();
+        // ActionListener cbl = new CancelButtonListener();
+        // ActionListener obl = new OKButtonListener();
 
-        okButton.addActionListener(obl);
-        cancelButton.addActionListener(cbl);
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveCurrentBindings();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadExistingBindings();
+            }
+        });
 
         JPanel buttonPanel = new JPanel();
 
@@ -136,37 +164,44 @@ public class KeyDialog extends JDialog {
         paint(getGraphics());
     }
 
-    public class OKButtonListener implements ActionListener {
-        public OKButtonListener() {
+    public void loadExistingBindings() {
+        File bindingsFile = new File(BINDINGS_FILE);
+
+        try {
+            Reader bindingsReader = new BufferedReader(new FileReader(bindingsFile));
+            this.bindings.load(bindingsReader);
+            bindingsReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        public void actionPerformed(ActionEvent e) {
-            System.out.println("ok button pressed ");
-            // now we have to assign the commands
-            int[] p1 = new int[5];
-            int[] p2 = new int[5];
+        this.p1Up.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-up")));
+        this.p1Down.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-down")));
+        this.p1Left.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-left")));
+        this.p1Right.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-right")));
+        this.p1Fire.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-fire")));
 
-            p1[0] = p1Up.getKeyCode();
-            p1[1] = p1Down.getKeyCode();
-            p1[2] = p1Left.getKeyCode();
-            p1[3] = p1Right.getKeyCode();
-            p1[4] = p1Fire.getKeyCode();
+        this.p2Up.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-up")));
+        this.p2Down.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-down")));
+        this.p2Left.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-left")));
+        this.p2Right.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-right")));
+        this.p2Fire.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-fire")));
+    }
 
-            p1[0] = p1Up.getKeyCode();
-            p1[1] = p1Down.getKeyCode();
-            p1[2] = p1Left.getKeyCode();
-            p1[3] = p1Right.getKeyCode();
-            p1[4] = p1Fire.getKeyCode();
+    public void saveCurrentBindings() {
+        File bindingsFile = new File(BINDINGS_FILE);
+
+        Writer writer = null;
+
+        try {
+            writer = new PrintWriter(bindingsFile);
+            this.bindings.store(writer, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public class CancelButtonListener implements ActionListener {
-        public CancelButtonListener() {
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            setVisible(false);
-        }
+    public void setTestingMode() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
 }
