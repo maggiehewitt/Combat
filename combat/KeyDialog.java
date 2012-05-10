@@ -37,6 +37,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,6 +50,9 @@ import javax.swing.JPanel;
 
 public class KeyDialog extends JFrame {
     private static final long serialVersionUID = -1;
+
+    public static final String BINDINGS_FILE = "bindings.properties";
+
     KeyBox p1Up;
     KeyBox p1Down;
     KeyBox p1Right;
@@ -58,6 +66,8 @@ public class KeyDialog extends JFrame {
     KeyBox p2Fire;
 
     JPanel mainPanel;
+
+    private Properties bindings = new Properties();
 
     /**
      * Creates this dialog.
@@ -73,6 +83,9 @@ public class KeyDialog extends JFrame {
 
         // fill the frame with the fields, and then construct it
         createDialog();
+
+        // Load existing bindings
+        loadExistingBindings();
     }
 
     /**
@@ -136,6 +149,30 @@ public class KeyDialog extends JFrame {
 
         pack();
         paint(getGraphics());
+    }
+
+    public void loadExistingBindings() {
+        File bindingsFile = new File(BINDINGS_FILE);
+
+        try {
+            Reader bindingsReader = new BufferedReader(new FileReader(bindingsFile));
+            this.bindings.load(bindingsReader);
+            bindingsReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.p1Up.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-up")));
+        this.p1Down.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-down")));
+        this.p1Left.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-left")));
+        this.p1Right.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-right")));
+        this.p1Fire.setKeyCode(Integer.parseInt(this.bindings.getProperty("p1-fire")));
+
+        this.p2Up.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-up")));
+        this.p2Down.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-down")));
+        this.p2Left.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-left")));
+        this.p2Right.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-right")));
+        this.p2Fire.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-fire")));
     }
 
     public class OKButtonListener implements ActionListener {
