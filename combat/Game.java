@@ -239,7 +239,6 @@ public class Game extends JPanel implements Timed {
      * Executes all tick actions
      */
     public void tick() {
-        System.out.println("TICK");
         if (gameActive) {
             gameLength--;
             if (gameLength == 0) {
@@ -249,8 +248,6 @@ public class Game extends JPanel implements Timed {
 
             boolean play1 = level.playerAlive(1);
             boolean play2 = level.playerAlive(2);
-
-            System.out.println(play1 + " " + play2);
 
             if (play1 && !play2) {
                 scores.incrementScoreForPlayer(1);

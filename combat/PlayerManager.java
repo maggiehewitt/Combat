@@ -246,7 +246,7 @@ public class PlayerManager implements Timed {
         if (!move())
             myPlayer.stay();
 
-        if (!this.myPlayer.isActive())
+        if (!this.alive)
             System.err.println("Player #" + myNum + " lost.");
     }
 
