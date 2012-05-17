@@ -143,13 +143,13 @@ public class Game extends JPanel implements Timed, Runnable {
      * 
      * @param timer The TimeManager for the game.
      */
-    public Game(TimeManager timer, Scoreboard scoreboard, CommandInterpreter ci) {
+    public Game(Scoreboard scoreboard, CommandInterpreter ci) {
         setFocusable(true);
         this.ci = ci;
 
         combat = true;
         level = null;
-        this.timer = timer;
+        this.timer = new TimeManager();
         timer.addTimed(this);
         levelFile = new String("level1.lvl");
         gameActive = false;

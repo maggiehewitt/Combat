@@ -57,7 +57,7 @@ import java.util.Enumeration;
 
 public class TimeManager extends Thread {
     private volatile boolean paused = false; // am I paused?
-    private volatile int delay; // delay between ticks
+    private volatile int delay = 10; // delay between ticks
     private volatile ImmutableList clocked = null; // the clocked objects
 
     /**
@@ -66,11 +66,8 @@ public class TimeManager extends Thread {
      * @param d The time to set as the delay.
      * @throws TimeException If a negative delay is specified.
      */
-    public TimeManager(int d) throws TimeException {
-        // set the delay time, if it is not negative
-        if (d < 0)
-            throw TimeException.NegativeDelay;
-        delay = d;
+    public TimeManager() {
+
     }
 
     /**
@@ -98,20 +95,6 @@ public class TimeManager extends Thread {
      */
     public void removeTimed(Timed el) {
         clocked = ImmutableList.remove(clocked, el);
-    }
-
-    /**
-     * This method sets the clock cycle delay.
-     * 
-     * @param d The time to wait between one pretick/tick cycle and the
-     *            next.
-     * @throws TimeException If a negative delay is specified.
-     */
-    public void changeDelay(int d) throws TimeException {
-        // set the delay time, if not negative
-        if (d < 0)
-            throw TimeException.NegativeDelay;
-        delay = d;
     }
 
     /**

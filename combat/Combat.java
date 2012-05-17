@@ -102,8 +102,6 @@ public class Combat {
      * @param argv[] The command line arguments.
      */
     public static void main(String argv[]) {
-        int timeDelay = 10; // Sets the delay to a tenth of a second.
-
         // Create the scoreboard and command listener objects needed by the
         // game.
         Scoreboard sb = new Scoreboard();
@@ -112,27 +110,21 @@ public class Combat {
         // attempt to load the game by creatign a time manager &
         // game obejct, which gets started.
         // if the load fails, end execution
-        try {
-            TimeManager gameTime = new TimeManager(timeDelay);
-            theGame = new Game(gameTime, sb, ci);
-            theGame.start();
-            ci.addWindowListener(new CombatWindowListener(theGame));
-            // set the layout for the content pane of the frame
-            Container c = ci.getContentPane();
-            BorderLayout theWindowLayout = new BorderLayout();
-            c.setLayout(theWindowLayout);
+        theGame = new Game(sb, ci);
+        theGame.start();
+        ci.addWindowListener(new CombatWindowListener(theGame));
+        // set the layout for the content pane of the frame
+        Container c = ci.getContentPane();
+        BorderLayout theWindowLayout = new BorderLayout();
+        c.setLayout(theWindowLayout);
 
-            // Create the menu, then place it, as well as the game and
-            // scoreboard,
-            // on the content pane.
-            CombatMenu cm = new CombatMenu(theGame);
-            c.add(cm, BorderLayout.NORTH);
-            c.add(theGame, BorderLayout.CENTER);
-            c.add(sb, BorderLayout.SOUTH);
-        } catch (TimeException err) {
-            System.err.println(err.getMessage());
-            System.exit(1);
-        }
+        // Create the menu, then place it, as well as the game and
+        // scoreboard,
+        // on the content pane.
+        CombatMenu cm = new CombatMenu(theGame);
+        c.add(cm, BorderLayout.NORTH);
+        c.add(theGame, BorderLayout.CENTER);
+        c.add(sb, BorderLayout.SOUTH);
 
         ci.setSize(750, 700);
         ci.setResizable(false);
