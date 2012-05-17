@@ -43,6 +43,8 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JButton;
@@ -70,15 +72,17 @@ public class KeyDialog extends JFrame {
     JPanel mainPanel;
 
     private Properties bindings = new Properties();
+    private CommandInterpreter ci;
 
     /**
      * Creates this dialog.
      * 
      * @param mainFrame The frame of the game (which I am part of).
      */
-    public KeyDialog() {
+    public KeyDialog(CommandInterpreter ci) {
         // call the parent constructor
         super("Key Mapping");
+        this.ci = ci;
 
         // Make exiting possible
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -142,6 +146,7 @@ public class KeyDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveCurrentBindings();
+                publishBindings();
             }
         });
 
@@ -186,6 +191,28 @@ public class KeyDialog extends JFrame {
         this.p2Left.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-left")));
         this.p2Right.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-right")));
         this.p2Fire.setKeyCode(Integer.parseInt(this.bindings.getProperty("p2-fire")));
+    }
+
+    public Map<Integer, String> getBindings() {
+        Map<Integer, String> mapping = new HashMap<Integer, String>();
+
+        mapping.put(this.p1Up.getKeyCode(), "p1-up");
+        mapping.put(this.p1Down.getKeyCode(), "p1-down");
+        mapping.put(this.p1Left.getKeyCode(), "p1-left");
+        mapping.put(this.p1Right.getKeyCode(), "p1-right");
+        mapping.put(this.p1Fire.getKeyCode(), "p1-fire");
+
+        mapping.put(this.p2Up.getKeyCode(), "p2-up");
+        mapping.put(this.p2Down.getKeyCode(), "p2-down");
+        mapping.put(this.p2Left.getKeyCode(), "p2-left");
+        mapping.put(this.p2Right.getKeyCode(), "p2-right");
+        mapping.put(this.p2Fire.getKeyCode(), "p2-fire");
+
+        return mapping;
+    }
+
+    private void publishBindings() {
+        ci.useKeyMap(getBindings());
     }
 
     public void saveCurrentBindings() {

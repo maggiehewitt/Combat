@@ -54,6 +54,8 @@ public class CombatMenu extends JPanel {
     Game theGame; // the game object
     JFrame levSelectWindow; // Window for selecting levels
 
+    private KeyDialog config;
+
     /**
      * Constructor
      * Simply constructs the Combat menu, which substitutes for a menu bar
@@ -73,6 +75,10 @@ public class CombatMenu extends JPanel {
         // create the level select window, buttons and score
         levSelectWindow = makeSetLevelWindow();
         buildButtons();
+    }
+
+    public void setKeyConfigurationDialog(KeyDialog dialog) {
+        this.config = dialog;
     }
 
     /**
@@ -103,7 +109,6 @@ public class CombatMenu extends JPanel {
         setKeys.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                KeyDialog config = new KeyDialog();
                 config.setVisible(true);
             }
         });

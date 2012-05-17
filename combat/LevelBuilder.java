@@ -215,17 +215,13 @@ public class LevelBuilder {
 
         switch (playerID) {
             case 1:
-                player1 = new PlayerManager(1, Integer.parseInt(this.keyBindings.getProperty("p1-up")),
-                        Integer.parseInt(this.keyBindings.getProperty("p1-down")), Integer.parseInt(this.keyBindings
-                                .getProperty("p1-right")), Integer.parseInt(this.keyBindings.getProperty("p1-left")),
-                        Integer.parseInt(this.keyBindings.getProperty("p1-fire")), player, bullet, ci);
+                player1 = new PlayerManager(1, player, bullet);
+                ci.register(1, player1);
                 break;
 
             case 2:
-                player2 = new PlayerManager(2, Integer.parseInt(this.keyBindings.getProperty("p2-up")),
-                        Integer.parseInt(this.keyBindings.getProperty("p2-down")), Integer.parseInt(this.keyBindings
-                                .getProperty("p2-right")), Integer.parseInt(this.keyBindings.getProperty("p2-left")),
-                        Integer.parseInt(this.keyBindings.getProperty("p2-fire")), player, bullet, ci);
+                player2 = new PlayerManager(2, player, bullet);
+                ci.register(2, player2);
                 break;
             default:
         }

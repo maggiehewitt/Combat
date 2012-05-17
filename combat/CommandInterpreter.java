@@ -48,19 +48,30 @@ package combat;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
 public class CommandInterpreter extends JFrame implements KeyListener {
     private static final long serialVersionUID = -1;
 
-    private Game game;
+    private PlayerManager player1;
+    private PlayerManager player2;
 
-    private int p1Command = 0; // player 1's current command
-    private int p2Command = 0; // player 2's current command
+    private Set<MoveCommand> p1Commands;
+    private Set<MoveCommand> p2Commands;
+
+    // private int p1Command = 0; // player 1's current command
+    // private int p2Command = 0; // player 2's current command
 
     private int p1cmds[] = new int[5]; // array of commands for player 1
     private int p2cmds[] = new int[5]; // array of commands for player 2
+
+    private Map<String, MoveCommand> moveMap; // id -> move
+    private Map<Integer, String> keyMap; // key -> id
 
     /**
      * Private constructor in order to follow the singleton pattern of
@@ -69,6 +80,8 @@ public class CommandInterpreter extends JFrame implements KeyListener {
     public CommandInterpreter() {
         // creation and setup for the main window for the system.
         super("COMBAT!");
+
+        setupMoveBindings();
 
         // add listeners to the window for keystroke and window commands
         setSize(750, 700);
@@ -82,8 +95,64 @@ public class CommandInterpreter extends JFrame implements KeyListener {
         System.err.println("Creating the first command interpreter.");
     }
 
-    public void setGame(Game g) {
-        this.game = g;
+    public void useKeyMap(Map<Integer, String> map) {
+        this.keyMap = map;
+    }
+
+    private void setupMoveBindings() {
+        moveMap = new HashMap<String, MoveCommand>();
+        keyMap = new HashMap<Integer, String>();
+        p1Commands = new HashSet<MoveCommand>();
+        p2Commands = new HashSet<MoveCommand>();
+
+        for (int i = 1; i <= 2; i++) {
+            moveMap.put("p" + i + "-up", new MoveCommand() {
+                @Override
+                void move() {
+                    System.out.println(getPlayer());
+                    getPlayer().moveForward();
+                }
+            });
+
+            moveMap.put("p" + i + "-down", new MoveCommand() {
+                @Override
+                void move() {
+                    getPlayer().moveBackward();
+                }
+            });
+
+            moveMap.put("p" + i + "-left", new MoveCommand() {
+                @Override
+                void move() {
+                    getPlayer().turnLeft();
+                }
+            });
+
+            moveMap.put("p" + i + "-right", new MoveCommand() {
+                @Override
+                void move() {
+                    getPlayer().turnRight();
+                }
+            });
+
+            moveMap.put("p" + i + "-fire", new MoveCommand() {
+                @Override
+                void move() {
+                    getPlayer().fire();
+                }
+            });
+        }
+
+        for (Map.Entry<String, MoveCommand> entry : moveMap.entrySet()) {
+            String key = entry.getKey();
+            MoveCommand cmd = entry.getValue();
+
+            if (key.startsWith("p1"))
+                p1Commands.add(cmd);
+
+            if (key.startsWith("p2"))
+                p2Commands.add(cmd);
+        }
     }
 
     /**
@@ -105,19 +174,10 @@ public class CommandInterpreter extends JFrame implements KeyListener {
         // get the key code for the event
         int code = e.getKeyCode();
 
-        // determine if the key pressed is of interest and assign it to the
-        // correct player
-        if ((code == p1cmds[0]) || (code == p1cmds[1]) || (code == p1cmds[2]) || (code == p1cmds[3])
-                || (code == p1cmds[4])) {
-            p1Command = code;
-        } else if ((code == p2cmds[0]) || (code == p2cmds[1]) || (code == p2cmds[2]) || (code == p2cmds[3])
-                || (code == p2cmds[4])) {
-            p2Command = code;
-        }
-        // otherwise, if the key event does not match, they hit a key that
-        // is not registered and we just ignore it
-        else {
-        }
+        String moveID = keyMap.get(code);
+        System.out.println(moveID);
+        MoveCommand command = moveMap.get(moveID);
+        command.move();
     }
 
     /**
@@ -129,49 +189,26 @@ public class CommandInterpreter extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    /**
-     * Gets the key code for a given player's command.
-     * 
-     * @param player The player to return the event for.
-     * @return The key code for player's next command.
-     */
-    public int getCommand(int player) {
-        // holds the response
-        int response = 0;
+    public void register(int id, PlayerManager player) {
+        switch (id) {
+            case 1:
+                this.player1 = player;
+                for (MoveCommand cmd : p1Commands) {
+                    cmd.setPlayer(this.player1);
+                }
+                System.out.println("adding for p1: " + player);
+                break;
 
-        // return the appropriate command determined by the player asking
-        if (player == 1) {
-            response = p1Command;
-            p1Command = 0;
-        } else if (player == 2) {
-            response = p2Command;
-            p2Command = 0;
+            case 2:
+                this.player2 = player;
+                for (MoveCommand cmd : p2Commands) {
+                    cmd.setPlayer(this.player2);
+                }
+                System.out.println("adding for p2: " + player);
+                break;
+
+            default:
+                throw new RuntimeException("id " + id + " is not valid.");
         }
-
-        return response;
-    }
-
-    /**
-     * Allows the PlayerManager to tell the CommandInterpreter what
-     * keys they are interested in.
-     * 
-     * @param playerNum The player number.
-     * @param cmds[] The player's commands to listen on.
-     * @throws IllegalArgumentException If the player number is out of
-     *             bounds.
-     */
-    public void register(int playerNum, int[] cmds) {
-        System.out.println("Register " + playerNum + " with commands: ");
-        for (int i = 0; i < cmds.length; i++) {
-            System.out.println("	" + i + ": " + cmds[i]);
-        }
-        System.out.println("");
-        // check the player number and assign the array accordingly
-        if (playerNum == 1)
-            p1cmds = cmds;
-        else if (playerNum == 2)
-            p2cmds = cmds;
-        else
-            throw new IllegalArgumentException("Invalid player number.");
     }
 }

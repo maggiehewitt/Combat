@@ -99,15 +99,13 @@ public class Combat {
      * @param argv[] The command line arguments.
      */
     public static void main(String argv[]) {
-        // Create the scoreboard and command listener objects needed by the
-        // game.
         Scoreboard sb = new Scoreboard();
+        theGame = new Game(sb);
         CommandInterpreter ci = new CommandInterpreter();
 
         // attempt to load the game by creatign a time manager &
         // game obejct, which gets started.
         // if the load fails, end execution
-        theGame = new Game(sb);
         LevelBuilder levelBuilder = new LevelBuilder(theGame, ci);
 
         theGame.setLevelBuilder(levelBuilder);
@@ -116,6 +114,10 @@ public class Combat {
         // scoreboard,
         // on the content pane.
         CombatMenu cm = new CombatMenu(theGame);
+        KeyDialog kDialog = new KeyDialog(ci);
+        cm.setKeyConfigurationDialog(kDialog);
+
+        ci.useKeyMap(kDialog.getBindings());
 
         ci.add(cm, BorderLayout.NORTH);
         ci.add(theGame, BorderLayout.CENTER);
