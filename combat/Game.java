@@ -147,7 +147,7 @@ public class Game extends JPanel implements Timed {
         this.ci = ci;
 
         combat = true;
-        level = null;
+        level = new LevelBuilder(this, this.ci);
         this.timer = new TimeManager();
         this.timer.addTimed(this);
         levelFile = new String("level1.lvl");
@@ -183,7 +183,7 @@ public class Game extends JPanel implements Timed {
         Rectangle tmp = getBounds();
         getGraphics().clearRect(tmp.x, tmp.y, tmp.width, tmp.height);
         repaint();
-        level = new LevelBuilder(levelFile, this, ci);
+        level.rebuild(levelFile);
         LinkedList objects = level.getTimed();
         ListIterator iterator = objects.listIterator(0);
         while (iterator.hasNext()) {

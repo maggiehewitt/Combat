@@ -71,11 +71,14 @@ package combat;
 
 import java.awt.Point;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -99,7 +102,7 @@ public class LevelBuilder {
     /**
      * A LinkedList of all barriers in the level
      */
-    LinkedList barriers;
+    Set<Barrier> barriers;
 
     /**
      * The JPanel this round will be show on.
@@ -118,37 +121,46 @@ public class LevelBuilder {
 
     public static final String BINDINGS_FILE = "bindings.properties";
 
-    /**
-     * The constructor
-     */
-    public LevelBuilder(String filename, JPanel canvas, CommandInterpreter ci) {
-        barriers = new LinkedList();
+    public LevelBuilder(JPanel canvas, CommandInterpreter ci) {
+        barriers = new HashSet<Barrier>();
         this.ci = ci;
+        this.canvas = canvas;
         this.keyBindings = new Properties();
         loadKeyBindings();
+    }
+
+    public void rebuild(String file) {
+        barriers.clear();
+        this.player1 = null;
+        this.player2 = null;
+
+        loadKeyBindings();
+
+        Scanner input = null;
+
         try {
-            BufferedReader input = new BufferedReader(new FileReader(filename));
-
-            while (input.ready()) {
-                String line = input.readLine();
-                StringTokenizer tokens = new StringTokenizer(line);
-
-                String type = tokens.nextToken();
-
-                if (type.equals("Background")) {
-                    ImageIcon tmp = new ImageIcon(tokens.nextToken());
-                    board = new Board(tmp.getImage(), canvas);
-                }
-
-                if (type.equals("Player1"))
-                    addPlayer(1, tokens);
-                if (type.equals("Player2"))
-                    addPlayer(2, tokens);
-                if (type.equals("Barrier"))
-                    addBarrier(tokens);
-            }
+            input = new Scanner(new File(file));
         } catch (Exception e) {
-            System.err.println(e.toString());
+            throw new RuntimeException("Could not make file " + file + ": " + e.getMessage());
+        }
+
+        while (input.hasNext()) {
+            String line = input.nextLine();
+            StringTokenizer tokens = new StringTokenizer(line);
+
+            String type = tokens.nextToken();
+
+            if (type.equals("Background")) {
+                ImageIcon tmp = new ImageIcon(tokens.nextToken());
+                board = new Board(tmp.getImage(), canvas);
+            }
+
+            if (type.equals("Player1"))
+                addPlayer(1, tokens);
+            if (type.equals("Player2"))
+                addPlayer(2, tokens);
+            if (type.equals("Barrier"))
+                addBarrier(tokens);
         }
     }
 
@@ -258,9 +270,9 @@ public class LevelBuilder {
      * @param player The PlayerManager to end
      */
     public void endPlayer(int player) {
-        if (player == 1)
+        if (player == 1 && player1 != null)
             player1.end();
-        else
+        else if (player == 2 && player2 != null)
             player2.end();
     }
 
@@ -268,11 +280,8 @@ public class LevelBuilder {
      * Calls end on every barrier
      */
     public void cleanUp() {
-        ListIterator list = barriers.listIterator(0);
-        while (list.hasNext()) {
-            Barrier tmp = (Barrier) list.next();
-            tmp.end();
-        }
+        for (Barrier b : barriers)
+            b.end();
     }
 
 }// class LevelBuilder
