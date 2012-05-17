@@ -215,17 +215,23 @@ public class LevelBuilder {
 
         switch (playerID) {
             case 1:
-                player1 = new PlayerManager(1, Integer.parseInt(this.keyBindings.getProperty("p1-up")),
-                        Integer.parseInt(this.keyBindings.getProperty("p1-down")), Integer.parseInt(this.keyBindings
-                                .getProperty("p1-right")), Integer.parseInt(this.keyBindings.getProperty("p1-left")),
-                        Integer.parseInt(this.keyBindings.getProperty("p1-fire")), player, bullet, ci);
+                int[] cmds = { 0, 0, 0, 0, 0 };
+                cmds[0] = Integer.parseInt(this.keyBindings.getProperty("p1-up"));
+                cmds[1] = Integer.parseInt(this.keyBindings.getProperty("p1-down"));
+                cmds[2] = Integer.parseInt(this.keyBindings.getProperty("p1-right"));
+                cmds[3] = Integer.parseInt(this.keyBindings.getProperty("p1-left"));
+                cmds[4] = Integer.parseInt(this.keyBindings.getProperty("p1-fire"));
+                player1 = new PlayerManager(1, cmds, player, bullet, ci);
                 break;
-
             case 2:
-                player2 = new PlayerManager(2, Integer.parseInt(this.keyBindings.getProperty("p2-up")),
-                        Integer.parseInt(this.keyBindings.getProperty("p2-down")), Integer.parseInt(this.keyBindings
-                                .getProperty("p2-right")), Integer.parseInt(this.keyBindings.getProperty("p2-left")),
-                        Integer.parseInt(this.keyBindings.getProperty("p2-fire")), player, bullet, ci);
+                int[] cmds2 = { 0, 0, 0, 0, 0 };
+                cmds2[0] = Integer.parseInt(this.keyBindings.getProperty("p2-up"));
+                cmds2[1] = Integer.parseInt(this.keyBindings.getProperty("p2-down"));
+                cmds2[2] = Integer.parseInt(this.keyBindings.getProperty("p2-right"));
+                cmds2[3] = Integer.parseInt(this.keyBindings.getProperty("p2-left"));
+                cmds2[4] = Integer.parseInt(this.keyBindings.getProperty("p2-fire"));
+                player2 = new PlayerManager(2, cmds2, player, bullet, ci);
+
                 break;
             default:
         }

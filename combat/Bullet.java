@@ -130,92 +130,106 @@ public class Bullet extends Sprite {
             // get the direction for checking purposes
             int dir = image.getDirection();
 
-            // first, we check to see if we are heading in a "straight" or
-            // dead-on
-            // direction, in which case we simply reverse direction.
-            if ((dir == DirectionalImage.North) || (dir == DirectionalImage.South) || (dir == DirectionalImage.East)
-                    || (dir == DirectionalImage.West)) {
-                // this factors in the "0" default direction
-                image.setDirection(((dir + 3) % 8) + 1);
-                board.registerMove(image, this);
-            } else {
-                // otherwise, we are moving diagonally, and so we need to figure
-                // our
-                // next direction by which part of the box we hit. To do that,
-                // we
-                // get the bounding box of the barrier and check some points
-                Rectangle barrierBox = enemy.getBoundingBox();
-                Point barUpperLeft = barrierBox.getLocation();
-                Point barLowerRight = new Point(barUpperLeft.x + barrierBox.width, barUpperLeft.y + barrierBox.height);
-                Point barUpperRight = new Point(barUpperLeft.x, barUpperLeft.y + barrierBox.height);
-                Point barLowerLeft = new Point(barUpperLeft.x + barrierBox.width, barUpperLeft.y);
-
-                // and we need my position
-                Rectangle bulletBox = getBoundingBox();
-                Point bulUpperLeft = bulletBox.getLocation();
-                Point bulLowerRight = new Point(bulUpperLeft.x + bulletBox.width, bulUpperLeft.y + bulletBox.height);
-                Point bulUpperRight = new Point(bulUpperLeft.x, bulUpperLeft.y + bulletBox.height);
-                Point bulLowerLeft = new Point(bulUpperLeft.x + bulletBox.width, bulUpperLeft.y);
-
-                // now, we decide which way to bounce case by case
-
-                // Basically, the bouncing algorithm checks first to see which
-                // we're heading, then from that tries to determine if I crossed
-                // the barrier from on the x plane or the y plane (since in each
-                // direction it is only possible to cross each plae one way).
-                // this will work along as I'm not moving in real large
-                // incements
-                // (i.e. real fast)
-
-                // northern movement
-                if ((dir == DirectionalImage.NorthWest)) {
-                    if ((bulUpperLeft.x <= barLowerRight.x) && (!(lastUpL.x >= barLowerRight.x))) {
-                        image.setDirection(DirectionalImage.SouthWest);
-                    } else if ((bulUpperLeft.y <= barLowerRight.y)) {
-                        image.setDirection(DirectionalImage.NorthEast);
-                    } else {
-                        System.err.println("ERROR - NW");
-                    }
-                }
-
-                if ((dir == DirectionalImage.NorthEast)) {
-                    if ((bulUpperLeft.x >= barLowerRight.x) && (!(lastUpL.x >= barLowerRight.x))) {
-                        image.setDirection(DirectionalImage.SouthEast);
-                    } else if ((bulLowerRight.y >= barUpperLeft.y)) {
-                        image.setDirection(DirectionalImage.NorthWest);
-                    } else {
-                        System.err.println("ERROR - NE");
-                    }
-                }
-
-                // now for southernly movement
-                if ((dir == DirectionalImage.SouthWest)) {
-                    if ((bulLowerRight.x <= barUpperLeft.x) && (!(lastLowR.x <= barUpperLeft.x))) {
-                        image.setDirection(DirectionalImage.NorthWest);
-                    } else if ((bulUpperLeft.y <= barLowerRight.y)) {
-                        image.setDirection(DirectionalImage.SouthEast);
-                    } else {
-                        System.err.println("ERROR - SW");
-                    }
-                }
-
-                if ((dir == DirectionalImage.SouthEast)) {
-                    if ((bulLowerRight.x >= barUpperLeft.x) && (!(lastLowR.x <= barUpperLeft.x))) {
-                        image.setDirection(DirectionalImage.NorthEast);
-                    } else if ((bulLowerRight.y >= barUpperLeft.y)) {
-                        image.setDirection(DirectionalImage.SouthWest);
-                    } else {
-                        System.err.println("ERROR - SE");
-                    }
-                }
-
-                // register the move with the board
-                board.registerMove(image, this);
-            }
+            setDirection(enemy, dir);
         }
 
         // here for completeness
         else {
+        }
+    }
+
+    private void setDirection(Sprite enemy, int dir) {
+        // first, we check to see if we are heading in a "straight" or
+        // dead-on
+        // direction, in which case we simply reverse direction.
+        if ((dir == DirectionalImage.North) || (dir == DirectionalImage.South) || (dir == DirectionalImage.East)
+                || (dir == DirectionalImage.West)) {
+            // this factors in the "0" default direction
+            image.setDirection(((dir + 3) % 8) + 1);
+            board.registerMove(image, this);
+        } else {
+            // otherwise, we are moving diagonally, and so we need to figure
+            // our
+            // next direction by which part of the box we hit. To do that,
+            // we
+            // get the bounding box of the barrier and check some points
+            Rectangle barrierBox = enemy.getBoundingBox();
+            Point barUpperLeft = barrierBox.getLocation();
+            Point barLowerRight = new Point(barUpperLeft.x + barrierBox.width, barUpperLeft.y + barrierBox.height);
+            Point barUpperRight = new Point(barUpperLeft.x, barUpperLeft.y + barrierBox.height);
+            Point barLowerLeft = new Point(barUpperLeft.x + barrierBox.width, barUpperLeft.y);
+
+            // and we need my position
+            Rectangle bulletBox = getBoundingBox();
+            Point bulUpperLeft = bulletBox.getLocation();
+            Point bulLowerRight = new Point(bulUpperLeft.x + bulletBox.width, bulUpperLeft.y + bulletBox.height);
+            Point bulUpperRight = new Point(bulUpperLeft.x, bulUpperLeft.y + bulletBox.height);
+            Point bulLowerLeft = new Point(bulUpperLeft.x + bulletBox.width, bulUpperLeft.y);
+
+            // now, we decide which way to bounce case by case
+
+            // Basically, the bouncing algorithm checks first to see which
+            // we're heading, then from that tries to determine if I crossed
+            // the barrier from on the x plane or the y plane (since in each
+            // direction it is only possible to cross each plae one way).
+            // this will work along as I'm not moving in real large
+            // incements
+            // (i.e. real fast)
+
+            // northern movement
+            northernMovement(dir, barUpperLeft, barLowerRight, bulUpperLeft, bulLowerRight);
+
+            // now for southernly movement
+            southernMovement(dir, barUpperLeft, barLowerRight, bulUpperLeft, bulLowerRight);
+
+            // register the move with the board
+            board.registerMove(image, this);
+        }
+    }
+
+    private void southernMovement(int dir, Point barUpperLeft, Point barLowerRight, Point bulUpperLeft,
+            Point bulLowerRight) {
+        if ((dir == DirectionalImage.SouthWest)) {
+            if ((bulLowerRight.x <= barUpperLeft.x) && (!(lastLowR.x <= barUpperLeft.x))) {
+                image.setDirection(DirectionalImage.NorthWest);
+            } else if ((bulUpperLeft.y <= barLowerRight.y)) {
+                image.setDirection(DirectionalImage.SouthEast);
+            } else {
+                System.err.println("ERROR - SW");
+            }
+        }
+
+        if ((dir == DirectionalImage.SouthEast)) {
+            if ((bulLowerRight.x >= barUpperLeft.x) && (!(lastLowR.x <= barUpperLeft.x))) {
+                image.setDirection(DirectionalImage.NorthEast);
+            } else if ((bulLowerRight.y >= barUpperLeft.y)) {
+                image.setDirection(DirectionalImage.SouthWest);
+            } else {
+                System.err.println("ERROR - SE");
+            }
+        }
+    }
+
+    private void northernMovement(int dir, Point barUpperLeft, Point barLowerRight, Point bulUpperLeft,
+            Point bulLowerRight) {
+        if ((dir == DirectionalImage.NorthWest)) {
+            if ((bulUpperLeft.x <= barLowerRight.x) && (!(lastUpL.x >= barLowerRight.x))) {
+                image.setDirection(DirectionalImage.SouthWest);
+            } else if ((bulUpperLeft.y <= barLowerRight.y)) {
+                image.setDirection(DirectionalImage.NorthEast);
+            } else {
+                System.err.println("ERROR - NW");
+            }
+        }
+
+        if ((dir == DirectionalImage.NorthEast)) {
+            if ((bulUpperLeft.x >= barLowerRight.x) && (!(lastUpL.x >= barLowerRight.x))) {
+                image.setDirection(DirectionalImage.SouthEast);
+            } else if ((bulLowerRight.y >= barUpperLeft.y)) {
+                image.setDirection(DirectionalImage.NorthWest);
+            } else {
+                System.err.println("ERROR - NE");
+            }
         }
     }
 

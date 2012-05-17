@@ -107,17 +107,18 @@ public class CommandInterpreter extends JFrame implements KeyListener {
 
         // determine if the key pressed is of interest and assign it to the
         // correct player
-        if ((code == p1cmds[0]) || (code == p1cmds[1]) || (code == p1cmds[2]) || (code == p1cmds[3])
-                || (code == p1cmds[4])) {
-            p1Command = code;
-        } else if ((code == p2cmds[0]) || (code == p2cmds[1]) || (code == p2cmds[2]) || (code == p2cmds[3])
-                || (code == p2cmds[4])) {
-            p2Command = code;
+        for (int i = 0; i < 5; i++) {
+            if (code == p1cmds[i]) {
+                p1Command = code;
+            } else if (code == p2cmds[i]) {
+                p2Command = code;
+            }
+            // otherwise, if the key event does not match, they hit a key that
+            // is not registered and we just ignore it
+            else {
+            }
         }
-        // otherwise, if the key event does not match, they hit a key that
-        // is not registered and we just ignore it
-        else {
-        }
+
     }
 
     /**

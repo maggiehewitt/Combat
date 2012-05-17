@@ -124,17 +124,13 @@ public class PlayerManager implements Timed {
      * @param player my player object
      * @param bullet my bullet object
      */
-    public PlayerManager(int playerNum, int up, int down, int right, int left, int fire, Player player, Bullet bullet,
-            CommandInterpreter ci) {
+    public PlayerManager(int playerNum, int[] getCmds, Player player, Bullet bullet, CommandInterpreter ci) {
         this.ci = ci;
 
         // assign the key commands
-        cmds[0] = up;
-        cmds[1] = down;
-        cmds[2] = right;
-        cmds[3] = left;
-        cmds[4] = fire;
-
+        for (int i = 0; i < 5; i++) {
+            cmds[i] = getCmds[i];
+        }
         // assign the player number for this instance of the PlayerManager
         myNum = playerNum;
         System.out.println("New PlayerManager for player " + playerNum);
@@ -187,37 +183,7 @@ public class PlayerManager implements Timed {
 
                 // Get the direction this player is going
                 int dir = myPlayer.getDirection();
-                Point bulletStart = loc;
-
-                switch (dir) {
-                // start the bullet, giving it an offset enough so I'm not
-                // shooting myself
-                    case (1):
-                        bulletStart = new Point(loc.x, loc.y - BulletOffset);
-                        break;
-                    case (2):
-                        bulletStart = new Point(loc.x + BulletOffset, loc.y - BulletOffset);
-                        break;
-                    case (3):
-                        bulletStart = new Point(loc.x + BulletOffset, loc.y);
-                        break;
-                    case (4):
-                        bulletStart = new Point(loc.x + BulletOffset, loc.y + BulletOffset);
-                        break;
-                    case (5):
-                        bulletStart = new Point(loc.x, loc.y + BulletOffset);
-                        break;
-                    case (6):
-                        bulletStart = new Point(loc.x - BulletOffset, loc.y + BulletOffset);
-                        break;
-                    case (7):
-                        bulletStart = new Point(loc.x - BulletOffset, loc.y);
-                        break;
-                    case (8):
-                        bulletStart = new Point(loc.x - BulletOffset, loc.y - BulletOffset);
-                        break;
-                    default:
-                }
+                Point bulletStart = fireBullet(loc, dir);
 
                 // place the bullet on the screen
                 myBullet.place(bulletStart, dir);
@@ -228,6 +194,41 @@ public class PlayerManager implements Timed {
         }
 
         return result;
+    }
+
+    private Point fireBullet(Point loc, int dir) {
+        Point bulletStart = loc;
+
+        switch (dir) {
+        // start the bullet, giving it an offset enough so I'm not
+        // shooting myself
+            case (1):
+                bulletStart = new Point(loc.x, loc.y - BulletOffset);
+                break;
+            case (2):
+                bulletStart = new Point(loc.x + BulletOffset, loc.y - BulletOffset);
+                break;
+            case (3):
+                bulletStart = new Point(loc.x + BulletOffset, loc.y);
+                break;
+            case (4):
+                bulletStart = new Point(loc.x + BulletOffset, loc.y + BulletOffset);
+                break;
+            case (5):
+                bulletStart = new Point(loc.x, loc.y + BulletOffset);
+                break;
+            case (6):
+                bulletStart = new Point(loc.x - BulletOffset, loc.y + BulletOffset);
+                break;
+            case (7):
+                bulletStart = new Point(loc.x - BulletOffset, loc.y);
+                break;
+            case (8):
+                bulletStart = new Point(loc.x - BulletOffset, loc.y - BulletOffset);
+                break;
+            default:
+        }
+        return bulletStart;
     }
 
     /**
