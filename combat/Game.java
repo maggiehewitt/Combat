@@ -142,12 +142,9 @@ public class Game extends JPanel implements Timed {
      * 
      * @param timer The TimeManager for the game.
      */
-    public Game(Scoreboard scoreboard, CommandInterpreter ci) {
+    public Game(Scoreboard scoreboard) {
         setFocusable(true);
-        this.ci = ci;
-
         combat = true;
-        level = new LevelBuilder(this, this.ci);
         this.timer = new TimeManager();
         this.timer.addTimed(this);
         levelFile = new String("level1.lvl");
@@ -155,6 +152,10 @@ public class Game extends JPanel implements Timed {
         scores = scoreboard;
         this.timer.start();
         pause();
+    }
+
+    public void setLevelBuilder(LevelBuilder builder) {
+        this.level = builder;
     }
 
     /**

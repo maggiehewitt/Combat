@@ -110,7 +110,11 @@ public class Combat {
         // attempt to load the game by creatign a time manager &
         // game obejct, which gets started.
         // if the load fails, end execution
-        theGame = new Game(sb, ci);
+        theGame = new Game(sb);
+        LevelBuilder levelBuilder = new LevelBuilder(theGame, ci);
+
+        theGame.setLevelBuilder(levelBuilder);
+
         ci.addWindowListener(new CombatWindowListener(theGame));
         // set the layout for the content pane of the frame
         Container c = ci.getContentPane();
@@ -135,7 +139,6 @@ public class Combat {
         // display the finished frame
         ci.setVisible(true);
     }// main()
-
 }
 
 /**
