@@ -74,8 +74,9 @@ package combat;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -105,7 +106,7 @@ public class Board implements Timed {
      * A HashTable containing all the Sprites which have registered since
      * the last pretick and their images.
      */
-    Hashtable spriteMoves;
+    Map<Sprite, DirectionalImage> spriteMoves;
 
     /**
      * The constructor
@@ -116,7 +117,7 @@ public class Board implements Timed {
     public Board(Image bg, JPanel playArea) {
         background = bg;
         area = playArea;
-        spriteMoves = new Hashtable();
+        spriteMoves = new HashMap<Sprite, DirectionalImage>();
         area.setDoubleBuffered(true);
     }
 
@@ -149,18 +150,19 @@ public class Board implements Timed {
         int height = background.getHeight(null);
         int width = background.getWidth(null);
         Rectangle bounds = new Rectangle(0, 0, width, height);
-        Enumeration sprites = spriteMoves.keys();
-        for (int i = 0; sprites.hasMoreElements(); i++) {
-            Sprite sprite = (Sprite) sprites.nextElement();
-            DirectionalImage attempt = (DirectionalImage) spriteMoves.get(sprite);
-            Enumeration enemies = spriteMoves.keys();
+        Iterator<Sprite> sprites = spriteMoves.keySet().iterator();
+
+        for (int i = 0; sprites.hasNext(); i++) {
+            Sprite sprite = sprites.next();
+            DirectionalImage attempt = spriteMoves.get(sprite);
+            Iterator<Sprite> enemies = spriteMoves.keySet().iterator();
 
             if (!attempt.within(bounds)) {
                 sprite.conflict(null);
             }
 
-            for (int j = 0; enemies.hasMoreElements(); j++) {
-                Sprite enemy = (Sprite) enemies.nextElement();
+            for (int j = 0; enemies.hasNext(); j++) {
+                Sprite enemy = enemies.next();
                 if (i != j) {
                     DirectionalImage block = (DirectionalImage) spriteMoves.get(enemy);
 
@@ -171,12 +173,12 @@ public class Board implements Timed {
             }
         }
 
-        sprites = spriteMoves.keys();
-        while (sprites.hasMoreElements()) {
-            Sprite next = (Sprite) sprites.nextElement();
+        sprites = spriteMoves.keySet().iterator();
+        while (sprites.hasNext()) {
+            Sprite next = sprites.next();
             area.paintImmediately(next.repaint(area.getGraphics()));
         }
-        spriteMoves = new Hashtable();
+        spriteMoves = new HashMap<Sprite, DirectionalImage>();
     }
 
     /**
