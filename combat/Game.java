@@ -124,7 +124,7 @@ import javax.swing.JPanel;
  * object that all the Sprites and board will draw to.
  */
 
-public class Game extends JPanel implements Timed, Runnable {
+public class Game extends JPanel implements Timed {
     private static final long serialVersionUID = -1;
 
     TimeManager timer;
@@ -133,7 +133,6 @@ public class Game extends JPanel implements Timed, Runnable {
     int gameLength;
     boolean gameActive;
     Board theBoard;
-    Thread thread;
     boolean combat;
     Scoreboard scores;
     CommandInterpreter ci;
@@ -150,11 +149,11 @@ public class Game extends JPanel implements Timed, Runnable {
         combat = true;
         level = null;
         this.timer = new TimeManager();
-        timer.addTimed(this);
+        this.timer.addTimed(this);
         levelFile = new String("level1.lvl");
         gameActive = false;
         scores = scoreboard;
-        timer.start();
+        this.timer.start();
         pause();
     }
 
@@ -180,6 +179,7 @@ public class Game extends JPanel implements Timed, Runnable {
             level.cleanUp();
         pause();
         timer.removeAll();
+        timer.addTimed(this);
         Rectangle tmp = getBounds();
         getGraphics().clearRect(tmp.x, tmp.y, tmp.width, tmp.height);
         repaint();
@@ -239,45 +239,35 @@ public class Game extends JPanel implements Timed, Runnable {
      * Executes all tick actions
      */
     public void tick() {
+        System.out.println("TICK");
         if (gameActive) {
             gameLength--;
             if (gameLength == 0) {
                 gameActive = false;
                 timer.pause();
             }
-        }
-    }
 
-    /**
-     * runs the thread. goes while the thread is active
-     */
-    public void run() {
-        while (combat) {
-            if (gameActive) {
-                boolean play1 = level.playerAlive(1);
-                boolean play2 = level.playerAlive(2);
+            boolean play1 = level.playerAlive(1);
+            boolean play2 = level.playerAlive(2);
 
-                if (play1 && !play2) {
-                    scores.incrementScoreForPlayer(1);
-                    gameActive = false;
-                    System.out.println("Player 1 wins this round.");
-                    level.endPlayer(1);
-                    newRound();
-                } else if (!play1 && play2) {
-                    scores.incrementScoreForPlayer(2);
-                    gameActive = false;
-                    System.out.println("Player 2 wins this round.");
-                    level.endPlayer(2);
-                    newRound();
-                } else if (!play1 && !play2) {
-                    gameActive = false;
-                    System.out.println("You killed each other.  No points.");
-                    newRound();
-                }
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            System.out.println(play1 + " " + play2);
+
+            if (play1 && !play2) {
+                scores.incrementScoreForPlayer(1);
+                gameActive = false;
+                System.out.println("Player 1 wins this round.");
+                level.endPlayer(1);
+                newRound();
+            } else if (!play1 && play2) {
+                scores.incrementScoreForPlayer(2);
+                gameActive = false;
+                System.out.println("Player 2 wins this round.");
+                level.endPlayer(2);
+                newRound();
+            } else if (!play1 && !play2) {
+                gameActive = false;
+                System.out.println("You killed each other.  No points.");
+                newRound();
             }
         }
     }
@@ -288,14 +278,5 @@ public class Game extends JPanel implements Timed, Runnable {
      */
     public void quit() {
         combat = false;
-    }
-
-    /**
-     * Start
-     * starts this thread
-     */
-    public void start() {
-        thread = new Thread(this);
-        thread.start();
     }
 }

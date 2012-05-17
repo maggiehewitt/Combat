@@ -92,7 +92,7 @@ package combat;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-public class PlayerManager extends Thread implements Timed {
+public class PlayerManager implements Timed {
     private int myNum; // the player number I am
     private CommandInterpreter ci; // the command interpreter form which I get
                                    // keyboard events
@@ -108,19 +108,8 @@ public class PlayerManager extends Thread implements Timed {
     private static int BulletOffset = 40; // how i figure out where to place the
                                           // bullet
 
-    /**
-     * Starts this thread (a "life")
-     */
-    public void run() {
-        // while I am alive...
-        while (myPlayer.isActive() && alive) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-            }
-        }
-        if (!end)
-            System.err.println("Player #" + myNum + " lost.");
+    public boolean isAlive() {
+        return this.myPlayer.isActive();
     }
 
     /**
@@ -201,8 +190,8 @@ public class PlayerManager extends Thread implements Timed {
                 Point bulletStart = loc;
 
                 switch (dir) {
-                    // start the bullet, giving it an offset enough so I'm not
-                    // shooting myself
+                // start the bullet, giving it an offset enough so I'm not
+                // shooting myself
                     case (1):
                         bulletStart = new Point(loc.x, loc.y - BulletOffset);
                         break;
@@ -256,6 +245,9 @@ public class PlayerManager extends Thread implements Timed {
         myBullet.moveForward();
         if (!move())
             myPlayer.stay();
+
+        if (!this.myPlayer.isActive())
+            System.err.println("Player #" + myNum + " lost.");
     }
 
     /**

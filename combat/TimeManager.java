@@ -46,6 +46,7 @@ package combat;
  * 
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,7 +68,7 @@ public class TimeManager extends Thread {
      * @throws TimeException If a negative delay is specified.
      */
     public TimeManager() {
-
+        this.clocked = new ArrayList<Timed>();
     }
 
     /**
@@ -107,10 +108,11 @@ public class TimeManager extends Thread {
             while (true) {
                 // as longh as we're not paused...
                 if (!paused) {
-                    for (Timed t : clocked)
+                    List<Timed> originals = new ArrayList<Timed>(clocked);
+                    for (Timed t : originals)
                         t.pretick();
 
-                    for (Timed t : clocked)
+                    for (Timed t : originals)
                         t.tick();
                 }
                 // delay for the specified time
@@ -136,4 +138,7 @@ public class TimeManager extends Thread {
         paused = false;
     }
 
+    public String toString() {
+        return paused + " " + "delay:" + " " + delay + " " + clocked.toString();
+    }
 }

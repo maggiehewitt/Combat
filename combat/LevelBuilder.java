@@ -207,7 +207,6 @@ public class LevelBuilder {
                         Integer.parseInt(this.keyBindings.getProperty("p1-down")), Integer.parseInt(this.keyBindings
                                 .getProperty("p1-right")), Integer.parseInt(this.keyBindings.getProperty("p1-left")),
                         Integer.parseInt(this.keyBindings.getProperty("p1-fire")), player, bullet, ci);
-                player1.start();
                 break;
 
             case 2:
@@ -215,7 +214,6 @@ public class LevelBuilder {
                         Integer.parseInt(this.keyBindings.getProperty("p2-down")), Integer.parseInt(this.keyBindings
                                 .getProperty("p2-right")), Integer.parseInt(this.keyBindings.getProperty("p2-left")),
                         Integer.parseInt(this.keyBindings.getProperty("p2-fire")), player, bullet, ci);
-                player2.start();
                 break;
             default:
         }

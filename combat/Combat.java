@@ -111,7 +111,6 @@ public class Combat {
         // game obejct, which gets started.
         // if the load fails, end execution
         theGame = new Game(sb, ci);
-        theGame.start();
         ci.addWindowListener(new CombatWindowListener(theGame));
         // set the layout for the content pane of the frame
         Container c = ci.getContentPane();
