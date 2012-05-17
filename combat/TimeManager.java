@@ -46,7 +46,7 @@ package combat;
  * 
  */
 
-import java.util.Enumeration;
+import java.util.List;
 
 /**
  * This class controls the system time. It cycles through a pretick
@@ -58,7 +58,7 @@ import java.util.Enumeration;
 public class TimeManager extends Thread {
     private volatile boolean paused = false; // am I paused?
     private volatile int delay = 10; // delay between ticks
-    private volatile ImmutableList clocked = null; // the clocked objects
+    private volatile List<Timed> clocked = null; // the clocked objects
 
     /**
      * This constructor sets the clock cycle delay.
@@ -78,14 +78,14 @@ public class TimeManager extends Thread {
      * @param el The element to register.
      */
     public void addTimed(Timed el) {
-        clocked = ImmutableList.add(clocked, el);
+        clocked.add(el);
     }
 
     /**
      * Empty the ImmutableList
      */
     public void removeAll() {
-        clocked = ImmutableList.removeAll(clocked);
+        clocked.clear();
     }
 
     /**
@@ -94,7 +94,7 @@ public class TimeManager extends Thread {
      * @param el The element to unregister.
      */
     public void removeTimed(Timed el) {
-        clocked = ImmutableList.remove(clocked, el);
+        clocked.remove(el);
     }
 
     /**
@@ -107,17 +107,11 @@ public class TimeManager extends Thread {
             while (true) {
                 // as longh as we're not paused...
                 if (!paused) {
-                    // get the list (enumeration) of timed objects
-                    Enumeration e = ImmutableList.elements(clocked);
+                    for (Timed t : clocked)
+                        t.pretick();
 
-                    // do a pretick broadcast
-                    while (e.hasMoreElements())
-                        ((Timed) e.nextElement()).pretick();
-
-                    e = ImmutableList.elements(clocked);
-                    // do a tick broadcast
-                    while (e.hasMoreElements())
-                        ((Timed) e.nextElement()).tick();
+                    for (Timed t : clocked)
+                        t.tick();
                 }
                 // delay for the specified time
                 Thread.sleep(delay);
