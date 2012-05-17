@@ -109,6 +109,7 @@ public class CommandInterpreter extends JFrame implements KeyListener {
             moveMap.put("p" + i + "-up", new MoveCommand() {
                 @Override
                 void move() {
+                    System.out.println(getPlayer());
                     getPlayer().moveForward();
                 }
             });
@@ -174,6 +175,7 @@ public class CommandInterpreter extends JFrame implements KeyListener {
         int code = e.getKeyCode();
 
         String moveID = keyMap.get(code);
+        System.out.println(moveID);
         MoveCommand command = moveMap.get(moveID);
         command.move();
     }
@@ -194,6 +196,7 @@ public class CommandInterpreter extends JFrame implements KeyListener {
                 for (MoveCommand cmd : p1Commands) {
                     cmd.setPlayer(this.player1);
                 }
+                System.out.println("adding for p1: " + player);
                 break;
 
             case 2:
@@ -201,6 +204,7 @@ public class CommandInterpreter extends JFrame implements KeyListener {
                 for (MoveCommand cmd : p2Commands) {
                     cmd.setPlayer(this.player2);
                 }
+                System.out.println("adding for p2: " + player);
                 break;
 
             default:
