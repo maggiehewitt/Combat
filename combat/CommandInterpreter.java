@@ -45,6 +45,7 @@ package combat;
  * 
  */
 
+import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -52,6 +53,8 @@ import javax.swing.JFrame;
 
 public class CommandInterpreter extends JFrame implements KeyListener {
     private static final long serialVersionUID = -1;
+
+    private Game game;
 
     private int p1Command = 0; // player 1's current command
     private int p2Command = 0; // player 2's current command
@@ -66,7 +69,21 @@ public class CommandInterpreter extends JFrame implements KeyListener {
     public CommandInterpreter() {
         // creation and setup for the main window for the system.
         super("COMBAT!");
+
+        // add listeners to the window for keystroke and window commands
+        setSize(750, 700);
+        setResizable(false);
+        addKeyListener(this);
+        setFocusable(true);
+        setLayout(new BorderLayout());
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         System.err.println("Creating the first command interpreter.");
+    }
+
+    public void setGame(Game g) {
+        this.game = g;
     }
 
     /**

@@ -81,9 +81,6 @@ package combat;
  */
 
 import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 /**
  * This class start up the game. It puts together the GUI and instantiates
@@ -115,111 +112,16 @@ public class Combat {
 
         theGame.setLevelBuilder(levelBuilder);
 
-        ci.addWindowListener(new CombatWindowListener(theGame));
-        // set the layout for the content pane of the frame
-        Container c = ci.getContentPane();
-        BorderLayout theWindowLayout = new BorderLayout();
-        c.setLayout(theWindowLayout);
-
         // Create the menu, then place it, as well as the game and
         // scoreboard,
         // on the content pane.
         CombatMenu cm = new CombatMenu(theGame);
-        c.add(cm, BorderLayout.NORTH);
-        c.add(theGame, BorderLayout.CENTER);
-        c.add(sb, BorderLayout.SOUTH);
 
-        ci.setSize(750, 700);
-        ci.setResizable(false);
-
-        // add listeners to the window for keystroke and window commands
-        ci.addKeyListener(ci);
-        ci.setFocusable(true);
+        ci.add(cm, BorderLayout.NORTH);
+        ci.add(theGame, BorderLayout.CENTER);
+        ci.add(sb, BorderLayout.SOUTH);
 
         // display the finished frame
         ci.setVisible(true);
     }// main()
-}
-
-/**
- * This class performs window listening duties
- */
-class CombatWindowListener implements WindowListener {
-    Game theGame; // the game object in the window
-
-    /**
-     * Constructor
-     * 
-     * @param Game game obejct in the window
-     */
-    public CombatWindowListener(Game game) {
-        theGame = game;
-    }
-
-    /**
-     * WindowActivated
-     * a No-op; conforms to WindowListener Interface
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowActivated(WindowEvent e) {
-    }
-
-    /**
-     * WindowClosed
-     * a No-op; conforms to WindowListener Interface
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowClosed(WindowEvent e) {
-    }
-
-    /**
-     * WindowClosing
-     * handles the closing of the window
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowClosing(WindowEvent e) {
-        // when the window closes, quit the game and exit
-        theGame.quit();
-        System.exit(1);
-    }
-
-    /**
-     * WindowDeactivated
-     * a No-op; conforms to WindowListener Interface
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    /**
-     * WindowDeiconified
-     * a No-op; conforms to WindowListener Interface
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    /**
-     * WindowIconified
-     * a No-op; conforms to WindowListener Interface
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowIconified(WindowEvent e) {
-    }
-
-    /**
-     * WindowOpened
-     * a No-op; conforms to WindowListener Interface
-     * 
-     * @param WindowEvent e the window event
-     */
-    public void windowOpened(WindowEvent e) {
-    }
-
 }
